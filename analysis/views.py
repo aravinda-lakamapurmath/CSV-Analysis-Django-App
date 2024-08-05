@@ -1,7 +1,10 @@
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 import base64
+from django.shortcuts import render
+from .forms import UploadFileForm  # Import the UploadFileForm class
 
 def upload_file(request):
     if request.method == 'POST':
@@ -14,8 +17,13 @@ def upload_file(request):
 
             # Generate a histogram
             plt.figure(figsize=(10, 6))
-            sns.histplot(df.select_dtypes(include=['float64', 'int64']).columns[0], data=df, kde=True)
-            plt.title('Histogram')
+            # Handle case where there are no numerical columns
+            numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
+            if not numeric_cols.empty:
+                sns.histplot(df[numeric_cols[0]], kde=True)
+                plt.title('Histogram of ' + numeric_cols[0])
+            else:
+                plt.text(0.5, 0.5, 'No numerical columns to plot', horizontalalignment='center', verticalalignment='center')
             buf = io.BytesIO()
             plt.savefig(buf, format='png')
             plt.close()
