@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results</title>
+</head>
+<body>
+    <h2>File Analysis Results</h2>
+    
+    <h3>First Few Rows:</h3>
+    {{ head|safe }}
+    
+    <h3>Summary Statistics:</h3>
+    {{ summary|safe }}
+    
+    <h3>Histogram:</h3>
+    <img src="data:image/png;base64,{{ image }}" alt="Histogram" />
+    
+    <a href="{% url 'upload_file' %}">Upload another file</a>
+</body>
+</html>
